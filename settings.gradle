@@ -1,0 +1,3 @@
+include ':makejardemolib'
+include ':app'
+rootProject.name = "MakeJarDemo"

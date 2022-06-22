@@ -1,0 +1,37 @@
+plugins {
+    id 'java-library'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+//    implementation 'com.squareup.okhttp3:okhttp:4.1.0'
+}
+
+
+/* jar 包名称 */
+def jarName = "makejarTest_1.0";
+/* 生成jar包的位置 */
+def outputLocal = "build";
+/* 待打包文件位置 */
+def zipFile = file("build/libs/makejardemolib.jar")
+
+task makeJar(type: Jar) {
+    /* 定义jar包中的主类 */
+    /* 定义的主类，在cmd中 调用  java -jar xxx xxx xxx 时，定义的这个主类的 main方法会接受 后面的参数 */
+    manifest.attributes "Main-Class": "com.bianbian.makejardemolib.UseJarTest"
+    from zipTree(zipFile)
+    /* 将 assets 目录下文件打进去 */
+    /* 语法猜测可能是： */
+    /* 来自于 文件（目录："xx/xx/path", 包含：['xx/所有文件']） */
+    from fileTree(dir: "src/main", includes: ['assets/**'])
+    /* lib 下的jar中的类，打到jar包中 */
+    /* 来自于 project(下的).压缩包("目录path/xxx.jar")) */
+    from(project.zipTree("libs/okhttp-4.1.0.jar"))
+    baseName = jarName
+    destinationDir = file(outputLocal)
+}
+makeJar.dependsOn(build)
